@@ -2,6 +2,20 @@
 
 A Streamlit machine-learning project exploring football player scoring rates across the **Premier League, La Liga, Bundesliga, Serie A and Ligue 1**.
 
+## Dashboard preview
+
+Explore the five-league player scoring-rate dashboard, including player profiles, rankings, league comparisons and model evaluation.
+
+![Fantasy AI dashboard overview](dashboard-overview.png)
+
+*Dashboard overview — scoring-rate exploration across five European leagues.*
+
+![Fantasy AI player rankings and analytics](dashboard-player-rankings.png)
+
+*Player rankings and visual analytics.*
+
+> Screenshots illustrate the retrospective V6 research dashboard, not live match predictions.
+
 ## Current dashboard
 
 The current `app.py` is a **retrospective player-season goals-per-90 explorer**, not a live fixture predictor. It provides player rankings, league and position filters, player comparisons and model evaluation. The V6 pipeline uses prior-season features to estimate the following season's goals per 90.
