@@ -1,4 +1,20 @@
-# Training status and release criteria
+# Training status and research scope
+
+> **Current release:** V6 is a real player-**season** scoring-rate exploration pipeline spanning five European leagues. Its trained Ridge model and retrospective evaluation CSVs are included in `artifacts/five_leagues_v6/`. This is separate from the earlier **player-match** experiments documented below.
+
+## V6 season-level results
+
+- Cohort: 1,316 players with at least 450 minutes in **both** the 2024/25 and 2025/26 seasons.
+- Held-out player split: 329 test players; Ridge MAE **0.06797** goals/90 versus previous-season baseline **0.07902**.
+- RMSE: Ridge **0.09735**, baseline **0.12302**.
+- Caveats: retrospective rather than prospective validation; eligibility uses future-season minutes; dashboard rankings include in-sample predictions. Not validated for upcoming matches.
+
+## Historical player-match work
+
+The notes below describe an **earlier, separate match-level workflow**. Statements about absent five-league *player-match* training do not mean the V6 *player-season* model is missing.
+
+---
+
 
 ## What is implemented
 - Match-level goal count regression (Poisson gradient boosting)
