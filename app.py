@@ -165,7 +165,7 @@ with tab_overview:
                 y=alt.Y("display:N", sort="-x", title=None),
                 tooltip=[alt.Tooltip("player_25:N", title="Player"), alt.Tooltip("team_25:N", title="Team"), alt.Tooltip("prediction:Q", title="AI goals/90", format=".3f")],
             ).properties(height=390)
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, width="stretch")
         with c2:
             st.markdown("#### Players by league")
             counts = ranked.groupby("league_label", as_index=False).size().rename(columns={"size": "players"})
@@ -174,7 +174,7 @@ with tab_overview:
                 y=alt.Y("league_label:N", sort="-x", title=None),
                 tooltip=["league_label:N", "players:Q"],
             ).properties(height=270)
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, width="stretch")
             st.caption("Counts reflect the filtered, retrospective cohort—not every player in each league.")
 
 with tab_explore:
@@ -200,12 +200,12 @@ with tab_explore:
             color=alt.Color("Metric:N", scale=alt.Scale(domain=["AI forecast", "2024/25", "2025/26 actual"], range=[GOLD, BLUE, MUTED]), legend=None),
             tooltip=["Metric:N", alt.Tooltip("Goals / 90:Q", format=".3f")],
         ).properties(height=270)
-        st.altair_chart(chart, use_container_width=True)
+        st.altair_chart(chart, width="stretch")
         st.markdown("#### AI player rankings")
         table = ranked[["player_25", "league_label", "team_25", "pos_24", "prediction", "prior", "playing_time_min_24"]].rename(columns={
             "player_25": "Player", "league_label": "League", "team_25": "Team", "pos_24": "Position",
             "prediction": "AI goals/90", "prior": "2024/25 goals/90", "playing_time_min_24": "2024/25 minutes"})
-        st.dataframe(table, hide_index=True, use_container_width=True, height=400,
+        st.dataframe(table, hide_index=True, width="stretch", height=400,
                      column_config={"AI goals/90": st.column_config.NumberColumn(format="%.3f"),
                                     "2024/25 goals/90": st.column_config.NumberColumn(format="%.3f")})
         st.download_button("Export filtered AI rankings (CSV)", table.to_csv(index=False).encode("utf-8-sig"),
@@ -232,9 +232,9 @@ with tab_compare:
                                 legend=alt.Legend(orient="bottom")),
                 tooltip=["display:N", "Metric:N", alt.Tooltip("Goals / 90:Q", format=".3f")],
             ).properties(height=370)
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, width="stretch")
             st.dataframe(comp[["player_25", "team_25", "prediction", "prior", "actual"]].rename(columns={
-                "player_25": "Player", "team_25": "Team", "prediction": "AI goals/90", "prior": "2024/25 goals/90", "actual": "2025/26 actual goals/90"}).round(3), hide_index=True, use_container_width=True)
+                "player_25": "Player", "team_25": "Team", "prediction": "AI goals/90", "prior": "2024/25 goals/90", "actual": "2025/26 actual goals/90"}).round(3), hide_index=True, width="stretch")
         else:
             st.info("Choose at least one player to compare.")
 
@@ -252,12 +252,12 @@ with tab_performance:
         color=alt.Color("Method:N", scale=alt.Scale(domain=["Previous-season baseline", "Ridge model"], range=[MUTED, GOLD])),
         tooltip=["Metric:N", "Method:N", alt.Tooltip("Error:Q", format=".5f")],
     ).properties(height=275)
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, width="stretch")
     st.markdown("#### Leave-one-league-out evaluation")
     try:
         league_results = load_csv("v6_league_evaluation.csv")
         league_results["league"] = league_results["league"].map(LEAGUES).fillna(league_results["league"])
-        st.dataframe(league_results.rename(columns={"league": "League", "players": "Players", "baseline_mae": "Baseline MAE", "model_mae": "Model MAE", "improvement_pct": "MAE improvement (%)", "model_rmse": "Model RMSE"}).round(4), hide_index=True, use_container_width=True)
+        st.dataframe(league_results.rename(columns={"league": "League", "players": "Players", "baseline_mae": "Baseline MAE", "model_mae": "Model MAE", "improvement_pct": "MAE improvement (%)", "model_rmse": "Model RMSE"}).round(4), hide_index=True, width="stretch")
         league_long = league_results.melt(id_vars="league", value_vars=["baseline_mae", "model_mae"], var_name="Method", value_name="MAE")
         league_long["Method"] = league_long["Method"].map({"baseline_mae": "Baseline", "model_mae": "Ridge"})
         chart = alt.Chart(league_long).mark_bar(cornerRadiusEnd=4).encode(
@@ -265,13 +265,13 @@ with tab_performance:
             color=alt.Color("Method:N", scale=alt.Scale(domain=["Baseline", "Ridge"], range=[MUTED, GOLD])),
             tooltip=["league:N", "Method:N", alt.Tooltip("MAE:Q", format=".4f")],
         ).properties(height=310)
-        st.altair_chart(chart, use_container_width=True)
+        st.altair_chart(chart, width="stretch")
     except FileNotFoundError:
         st.warning("League evaluation CSV not found. Run: python -m scripts.evaluate_v6_leagues")
     st.markdown("#### Held-out predictions")
     try:
         heldout = load_csv("v6_test_predictions.csv")
-        st.dataframe(heldout.head(100).round(3), hide_index=True, use_container_width=True, height=270)
+        st.dataframe(heldout.head(100).round(3), hide_index=True, width="stretch", height=270)
         st.download_button("Download held-out predictions", heldout.to_csv(index=False).encode("utf-8-sig"),
                            "fantasy_ai_v6_heldout.csv", "text/csv", key="heldout_export")
     except FileNotFoundError:
