@@ -1,0 +1,1 @@
+Place licensed player-match CSV data here for real training. demo_history.csv is synthetic and must not be used to claim real-world performance. External football datasets are not redistributed in this repository.
