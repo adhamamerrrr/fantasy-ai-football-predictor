@@ -6,7 +6,7 @@ A Streamlit machine-learning project exploring football player scoring rates acr
 
 The current `app.py` is a **retrospective player-season goals-per-90 explorer**, not a live fixture predictor. It provides player rankings, league and position filters, player comparisons and model evaluation. The V6 pipeline uses prior-season features to estimate the following season's goals per 90.
 
-**Important:** The dashboard requires locally generated files in `artifacts/five_leagues_v6/`. Those files are **not currently committed to this repository**. Follow the setup below before running the premium dashboard.
+**Ready to explore:** The repository includes the V6 model (`v6_ridge_model.joblib`), matched-player table, held-out predictions and league evaluation CSVs under `artifacts/five_leagues_v6/`. The dashboard can use these files immediately after installing dependencies. Raw upstream football data is not included.
 
 ## Setup
 
@@ -19,18 +19,23 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-### Prepare the real season dataset and train V6
+### Launch the dashboard
 
-Obtain the upstream `player_seasons.csv` from [m-mahadi/top5-football-dataset](https://github.com/m-mahadi/top5-football-dataset) and place it at `data/master/player_seasons.csv`. Review the upstream dataset's usage terms.
+```bash
+python -m streamlit run app.py
+```
+
+### Reproduce the V6 training outputs
+
+Download the upstream `player_seasons.csv` from [m-mahadi/top5-football-dataset](https://github.com/m-mahadi/top5-football-dataset), review its terms, and save it as `artifacts/five_leagues_v6/player_seasons.csv` (the exact path currently expected by `scripts/prepare_v6.py`). From the repository root, run:
 
 ```bash
 python -m scripts.prepare_v6
 python -m scripts.train_v6
 python -m scripts.evaluate_v6_leagues
-python -m streamlit run app.py
 ```
 
-If the preparation script requires a different input path, check its CLI options/source before running. The scripts generate the model, matched-player records, predictions and league evaluations used by the dashboard.
+These commands regenerate the matched-player data, model and evaluation outputs. The upstream dataset is not redistributed in this repository.
 
 ## Model and evaluation
 
@@ -58,6 +63,10 @@ This corresponds to approximately **13.99% lower MAE** than the baseline in that
 - `TRAINING_STATUS.md` — earlier experimental workflow and history
 
 Earlier match-level models and the synthetic demo workflow are separate experiments and should not be confused with the current V6 dashboard.
+
+## Research integrity
+
+The saved model was fitted on the training portion of the matched cohort for held-out evaluation. Dashboard-wide rankings also score players who were in the training split; therefore **dashboard-wide rankings are not an out-of-sample performance evaluation**. The reported MAE and RMSE refer to the held-out subset only. This project is an analytical prototype, not a live fantasy points optimizer, betting model, or production forecast service.
 
 ## Tests
 
